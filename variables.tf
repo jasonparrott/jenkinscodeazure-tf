@@ -1,7 +1,3 @@
-variable "key_name" {
-  default = "jenkins"
-}
-
 variable "region" {
   default = "westus"
 }
