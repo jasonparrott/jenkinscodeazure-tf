@@ -1,0 +1,26 @@
+version: '3.3'
+
+services:
+  jenkins: 
+    build: .
+    ports: 
+      - 80:8080
+      - 50000:50000
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - ./casc:/var/jenkins_conf
+    secrets:
+      - admin
+      - agentadmin
+      - azureclientsecret
+    environment:
+      - CASC_JENKINS_CONFIG=/var/jenkins_conf
+secrets: #Be careful with newlines in your secrets, make sure to remove them before running docker-compose up.
+  admin:
+    file: ./secrets/admin.pwd
+  agentadmin: 
+    file: ./secrets/agentadmin.pwd
+  azureclientsecret:
+    file: ./secrets/azureclientsecret.pwd
+volumes:
+  jenkins_home:

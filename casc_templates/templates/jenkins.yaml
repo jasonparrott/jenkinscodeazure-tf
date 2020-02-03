@@ -1,0 +1,70 @@
+jenkins:
+  systemMessage: "${systemMessage}"
+
+  numExecutors: 1
+  mode: NORMAL
+  scmCheckoutRetryCount: 3
+  labelString: "master-label"  
+
+  clouds:
+  - azureVM:
+      azureCredentialsId: "azure-client"
+      cloudName: "azure-build-agents"
+      configurationStatus: "pass"
+      deploymentTimeout: 1200
+      existingResourceGroupName: "{{ azure_resource_group }}"
+      maxVirtualMachinesLimit: "{{ maxVirtualMachines }}"
+      resourceGroupReferenceType: "existing"
+      vmTemplates:
+      - credentialsId: "agent-admin"
+        location: "{{ azure_location }}"
+        newStorageAccountName: "{{ azure_storageaccount_name }}"
+        storageAccountType: "Standard_LRS"
+        virtualMachineSize: "{{ agentVmSize }}"
+        retentionStrategy:
+          azureVMCloudRetentionStrategy:
+            idleTerminationMinutes: "{{ agentIdleTimeout }}"
+        agentLaunchMethod: "SSH"
+        builtInImage: "Ubuntu 16.04 LTS"
+        diskType: "managed"
+        doNotUseMachineIfInitFails: true
+        enableMSI: false
+        enableUAMI: false
+        ephemeralOSDisk: false
+        executeInitScriptAsRoot: true
+        imageReference:
+          version: "latest"
+        imageTopLevelType: "basic"
+        installDocker: true
+        installGit: true
+        installMaven: true
+        noOfParallelJobs: "{{ agentParallelJobs }}"
+        osDiskSize: 0
+        osType: "Linux"
+        preInstallSsh: true
+        shutdownOnIdle: false
+        storageAccountNameReferenceType: "new"
+        templateDisabled: false
+        templateName: "standard-build-agent"
+        usageMode: "Use this node as much as possible"
+        usePrivateIP: false
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: admin
+         password: ${adminpw}
+
+  authorizationStrategy:
+    globalMatrix:
+      grantedPermissions:
+        - "Overall/Read:anonymous"
+        - "Job/Read:anonymous"
+        - "View/Read:anonymous"
+        - "Overall/Administer:anonymous"
+
+  crumbIssuer: "standard"
+
+  remotingSecurity:
+    enabled: true    

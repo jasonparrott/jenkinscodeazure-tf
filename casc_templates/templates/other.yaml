@@ -1,0 +1,4 @@
+unclassified:
+  location:
+    url: "${jenkinsUrl}"
+    adminAddress: "${adminEmail}"
